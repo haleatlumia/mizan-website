@@ -42,10 +42,28 @@ Needs Node 22.23.4 or newer.
 
 ## Deploy
 
-Connect this repo to a new Netlify site (Add new site → Import from Git).
-`netlify.toml` already sets the build command, the `dist` folder and the Node
-version, so every push to `main` deploys and every pull request gets a
-preview link.
+Hosted on Netlify as the `mizan-website` project (Lumia Partners team):
+https://mizan-website.netlify.app
+
+- Every push to `main` deploys to production.
+- Every pull request gets its own preview link
+  (`deploy-preview-<number>--mizan-website.netlify.app`).
+- Build settings live in `netlify.toml`: build command, `dist` folder,
+  Node version and headers.
+
+The repo is connected through the Netlify GitHub App.
+
+**This GitHub repo is public on purpose.** Netlify blocks automatic builds
+from private repos on this account ("Build blocked: Unrecognized Git
+contributor"), even with GitHub linked. If the repo is made private again,
+pushes will stop deploying. Because it's public, never commit secrets,
+unreleased investor material or anything else that shouldn't be seen.
+
+The Netlify CLI isn't installed globally; run it through npx:
+
+```bash
+npx -y netlify-cli@27.16.2 status
+```
 
 ## Rules
 
