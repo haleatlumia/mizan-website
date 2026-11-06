@@ -1,0 +1,17 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="Page not found">
+  <section class="wrap nf">
+    <div class="eyebrow">404</div>
+    <h1>This page isn't here.</h1>
+    <p><a href="/">Return to the home page</a></p>
+  </section>
+</Base>
+
+<style>
+  .nf { text-align: center; padding-top: clamp(72px, 14vh, 140px); padding-bottom: 96px; }
+  h1 { font-size: clamp(34px, 6vw, 48px); margin-top: 16px; }
+  p { margin-top: 24px; color: var(--muted); }
+  a { color: var(--brass-d); }
+</style>

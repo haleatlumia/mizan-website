@@ -1,0 +1,21 @@
+# Build output
+dist/
+.astro/
+
+# Dependencies
+node_modules/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Netlify local state
+.netlify/
+
+# Logs
+npm-debug.log*
+
+# macOS
+.DS_Store
+**/.DS_Store

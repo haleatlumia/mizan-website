@@ -1,0 +1,14 @@
+---
+// Umami page-view analytics. Umami sets no cookies and stores nothing
+// on the visitor's device, so the site needs no consent banner.
+// Renders nothing when site.umamiWebsiteId is empty.
+import { site } from '../site.config';
+---
+{site.umamiWebsiteId && (
+  <script
+    is:inline
+    defer
+    src="https://cloud.umami.is/script.js"
+    data-website-id={site.umamiWebsiteId}
+  ></script>
+)}

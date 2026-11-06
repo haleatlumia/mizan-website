@@ -1,0 +1,53 @@
+---
+import { site } from '../site.config';
+
+// Add pages here as they're built, e.g. { href: '/club/', label: 'The Club' }.
+const nav: { href: string; label: string }[] = [];
+const path = Astro.url.pathname;
+---
+<header class="site-header">
+  <div class="wrap bar">
+    <a class="brand" href="/" aria-label={`${site.name}, home`}>{site.name}</a>
+    {nav.length > 0 && (
+      <nav aria-label="Main">
+        <ul>
+          {nav.map((item) => (
+            <li>
+              <a href={item.href} aria-current={path.startsWith(item.href) ? 'page' : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    )}
+  </div>
+</header>
+
+<style>
+  .site-header { border-bottom: 1px solid var(--line); }
+  .bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    min-height: 64px;
+  }
+  .brand {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 24px;
+    text-decoration: none;
+    letter-spacing: .3px;
+  }
+  ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 24px; flex-wrap: wrap; }
+  nav a {
+    font-size: 12px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--muted);
+  }
+  nav a:hover, nav a[aria-current='page'] { color: var(--ink); }
+</style>
