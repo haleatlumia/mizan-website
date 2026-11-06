@@ -51,9 +51,13 @@ https://mizan-website.netlify.app
 - Build settings live in `netlify.toml`: build command, `dist` folder,
   Node version and headers.
 
-The repo is connected through a read-only deploy key and a GitHub webhook,
-not the Netlify GitHub App, so builds don't post status checks on commits
-or pull requests. Follow builds in the Netlify dashboard instead.
+The repo is connected through the Netlify GitHub App.
+
+**This GitHub repo is public on purpose.** Netlify blocks automatic builds
+from private repos on this account ("Build blocked: Unrecognized Git
+contributor"), even with GitHub linked. If the repo is made private again,
+pushes will stop deploying. Because it's public, never commit secrets,
+unreleased investor material or anything else that shouldn't be seen.
 
 The Netlify CLI isn't installed globally; run it through npx:
 

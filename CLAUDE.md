@@ -5,6 +5,8 @@ See README.md for commands and layout.
 
 ## Hard rules
 
+- The GitHub repo is public (Netlify won't auto-build it while private; see
+  README). Never commit secrets, API keys, tokens or `.env` files.
 - This repo is public-facing. Never add data room material: financial model
   figures, returns, valuations, raise terms, cap table, operating standards,
   feasibility work or anything from `mizan/dataroom`. If a page needs a number,
