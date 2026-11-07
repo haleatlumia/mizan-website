@@ -2,25 +2,68 @@
 import { site } from '../site.config';
 const year = new Date().getFullYear();
 ---
-<footer class="site-footer">
-  <div class="wrap row">
-    <span>{site.name} · {site.markets.join(' · ')}</span>
-    <span>© {year} {site.name}</span>
+<footer class="site-footer on-dark">
+  <div class="container">
+    <p class="mark" aria-hidden="true">{site.name}</p>
+    <div class="row">
+      <p class="pillars">{site.pillars.join(' · ')}</p>
+      <a class="join" href="/#waitlist">Join the waitlist →</a>
+    </div>
+    <div class="row small">
+      <p>{site.cities.map((c) => c.name).join(' · ')}</p>
+      <p>Concept renders. Spaces, amenities and programming may vary by location.</p>
+      <p>© {year} {site.name}</p>
+    </div>
   </div>
 </footer>
 
 <style>
   .site-footer {
-    border-top: 1px solid var(--line);
-    color: var(--muted-2);
-    font-size: 12px;
+    padding-block: clamp(72px, 10vw, 140px) 36px;
+    border-top: 1px solid var(--line-dark);
+  }
+  .mark {
+    font-family: var(--serif);
+    font-weight: 300;
+    font-size: clamp(72px, 19vw, 300px);
+    line-height: .82;
+    letter-spacing: .12em;
+    margin-right: -.12em;
+    text-transform: uppercase;
+    color: rgb(244 239 229 / .92);
+    text-align: center;
   }
   .row {
+    margin-top: clamp(40px, 5vw, 64px);
     display: flex;
-    gap: 10px;
     flex-wrap: wrap;
     justify-content: space-between;
-    padding-top: 28px;
-    padding-bottom: clamp(28px, 5vh, 44px);
+    align-items: center;
+    gap: 16px 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line-dark);
+  }
+  .pillars {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .26em;
+    text-transform: uppercase;
+    color: var(--brass-l);
+  }
+  .join {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-bottom: 1px solid rgb(244 239 229 / .35);
+    padding-bottom: 4px;
+  }
+  .join:hover { border-color: var(--canvas); }
+  .small {
+    margin-top: 0;
+    border-top: 0;
+    font-size: 12.5px;
+    color: rgb(244 239 229 / .45);
   }
 </style>

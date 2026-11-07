@@ -1,0 +1,91 @@
+---
+// Renders a photo from src/assets/photos by name (file name without the
+// extension, e.g. "lounge" for lounge.jpg), as responsive AVIF/WebP.
+// Until that file exists, renders a styled placeholder panel instead,
+// so the layout can be reviewed before the photography arrives.
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  name: string;
+  alt: string;
+  sizes?: string;
+  loading?: 'eager' | 'lazy';
+  fetchpriority?: 'high' | 'low' | 'auto';
+  class?: string;
+}
+
+const {
+  name,
+  alt,
+  sizes = '100vw',
+  loading = 'lazy',
+  fetchpriority = 'auto',
+  class: className,
+} = Astro.props;
+
+const files = import.meta.glob<{ default: ImageMetadata }>(
+  '../assets/photos/*.{jpg,jpeg,png,webp,avif,JPG,JPEG,PNG,WEBP}',
+  { eager: true },
+);
+const match = Object.entries(files).find(
+  ([path]) => path.split('/').pop()!.replace(/\.[^.]+$/, '').toLowerCase() === name,
+);
+const image = match?.[1].default;
+
+const candidates = [480, 768, 1080, 1440, 1920, 2560];
+const widths = image
+  ? (() => {
+      const fit = candidates.filter((w) => w < image.width);
+      return [...fit, image.width];
+    })()
+  : [];
+
+const labels: Record<string, string> = {
+  exterior: 'Exterior',
+  lounge: 'The Lounge',
+  courts: 'Courts',
+  studio: 'Movement studio',
+  gym: 'Gym',
+  'wet-recovery': 'Wet recovery',
+  'dry-recovery': 'Dry recovery',
+  hammam: 'The Hammam',
+  'mizaj-suite': 'The Mizaj Suite',
+  coffee: 'Coffee & tea bar',
+};
+---
+{image ? (
+  <Picture
+    src={image}
+    alt={alt}
+    widths={widths}
+    sizes={sizes}
+    formats={['avif', 'webp']}
+    loading={loading}
+    decoding={loading === 'eager' ? 'sync' : 'async'}
+    fetchpriority={fetchpriority}
+    class:list={['fill-media', className]}
+  />
+) : (
+  <div class:list={['fill-media', 'ph', className]} role="img" aria-label={alt}>
+    <span>{labels[name] ?? name} · photo to come</span>
+  </div>
+)}
+
+<style>
+  .ph {
+    display: grid;
+    align-items: end;
+    background:
+      radial-gradient(120% 80% at 70% 20%, rgb(202 164 110 / .28), transparent 60%),
+      radial-gradient(90% 70% at 10% 100%, rgb(31 26 20 / .55), transparent 70%),
+      linear-gradient(160deg, #6b5a45 0%, #3b3127 55%, #241e17 100%);
+  }
+  .ph span {
+    padding: 18px 20px;
+    font: 600 10.5px/1.2 var(--sans);
+    letter-spacing: .24em;
+    text-transform: uppercase;
+    color: rgb(244 239 229 / .55);
+  }
+</style>
