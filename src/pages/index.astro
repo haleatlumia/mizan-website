@@ -1,46 +1,19 @@
 ---
 import Base from '../layouts/Base.astro';
-import { site } from '../site.config';
+import Hero from '../components/Hero.astro';
+import Practice from '../components/Practice.astro';
+import Lineage from '../components/Lineage.astro';
+import Pillars from '../components/Pillars.astro';
+import Spaces from '../components/Spaces.astro';
+import Cities from '../components/Cities.astro';
+import Waitlist from '../components/Waitlist.astro';
 ---
-<Base>
-  <section class="hero">
-    <div class="wrap">
-      <div class="eyebrow">{site.eyebrow}</div>
-      <h1>{site.name}</h1>
-      <div class="rule"></div>
-      <p class="tag">{site.tagline}</p>
-    </div>
-  </section>
-
-  <!--
-    Placeholder home page. Sections to build out, for example:
-      - The club: the concept and the five pillars
-      - Membership
-      - Locations
-      - Enquire / contact
-    Public copy only. Investor figures and data room material
-    stay in the mizan repo.
-  -->
+<Base overHero>
+  <Hero />
+  <Practice />
+  <Lineage />
+  <Pillars />
+  <Spaces />
+  <Cities />
+  <Waitlist />
 </Base>
-
-<style>
-  .hero {
-    text-align: center;
-    padding: clamp(72px, 16vh, 160px) 0 clamp(72px, 14vh, 140px);
-  }
-  h1 {
-    font-style: italic;
-    font-size: clamp(56px, 12vw, 96px);
-    line-height: 1;
-    letter-spacing: .5px;
-    margin-top: 16px;
-  }
-  .rule { margin: 28px auto 0; }
-  .tag {
-    margin: 26px auto 0;
-    font-size: 16px;
-    color: var(--muted);
-    max-width: 440px;
-    line-height: 1.6;
-  }
-</style>

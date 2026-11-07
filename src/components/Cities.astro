@@ -1,0 +1,190 @@
+---
+// The dotted map is computed at build time: zero map JavaScript ships to
+// the browser. Only the small clock script below runs client-side.
+import DottedMap from 'dotted-map';
+import { site } from '../site.config';
+
+const map = new DottedMap({
+  height: 52,
+  grid: 'diagonal',
+  region: { lat: { min: 14, max: 63 }, lng: { min: -124, max: 46 } },
+});
+
+// Label placement per city, in map units, so close pairs don't collide.
+const labelAt: Record<string, { dx: number; dy: number; anchor: 'start' | 'middle' | 'end' }> = {
+  Miami: { dx: 0, dy: 3.4, anchor: 'middle' },
+  Dallas: { dx: -1.8, dy: 0.6, anchor: 'end' },
+  'New York': { dx: 1.6, dy: -1.6, anchor: 'start' },
+  London: { dx: 0, dy: -2.2, anchor: 'middle' },
+  Istanbul: { dx: -1.4, dy: -1.8, anchor: 'end' },
+  Ankara: { dx: 1.4, dy: 2.8, anchor: 'start' },
+};
+
+for (const c of site.cities) map.addPin({ lat: c.lat, lng: c.lng, data: c.name });
+const points = map.getPoints() as { x: number; y: number; data?: string }[];
+
+const r = (n: number) => Math.round(n * 100) / 100;
+const dots = points.filter((p) => !p.data);
+const pins = points.filter((p) => p.data);
+const width = Math.ceil(Math.max(...points.map((p) => p.x)) + 1);
+const height = Math.ceil(Math.max(...points.map((p) => p.y)) + 1);
+const dotPath = dots.map((p) => `M${r(p.x)} ${r(p.y)}h0`).join('');
+
+const fmtCoord = (v: number, pos: string, neg: string) => `${Math.abs(v).toFixed(2)}° ${v >= 0 ? pos : neg}`;
+---
+<section class="cities section on-dark" id="cities" aria-labelledby="cities-title">
+  <div class="container">
+    <div class="head">
+      <div>
+        <p class="eyebrow" data-reveal>Locations</p>
+        <h2 id="cities-title" class="h2" data-reveal>Six cities. One practice.</h2>
+      </div>
+      <p class="lede" data-reveal>
+        Mizan is coming to {site.cities.map((c) => c.name).slice(0, -1).join(', ')} and {site.cities.at(-1)!.name}.
+        Membership opens city by city.
+      </p>
+    </div>
+
+    <figure class="map" data-reveal>
+      <svg viewBox={`-1 -1 ${width + 2} ${height + 2}`} role="img" aria-labelledby="map-title">
+        <title id="map-title">Map showing Mizan's six cities: {site.cities.map((c) => c.name).join(', ')}</title>
+        <path class="land" d={dotPath} />
+        {pins.map((p, i) => {
+          const l = labelAt[p.data!] ?? { dx: 0, dy: -2, anchor: 'middle' as const };
+          return (
+            <g class="pin" style={`--i:${i}`} transform={`translate(${r(p.x)} ${r(p.y)})`}>
+              <circle class="pulse" r="1.1" />
+              <circle class="core" r=".55" />
+              <text x={l.dx} y={l.dy} text-anchor={l.anchor}>{p.data}</text>
+            </g>
+          );
+        })}
+      </svg>
+    </figure>
+
+    <ul class="list">
+      {site.cities.map((c) => (
+        <li class="city" data-reveal>
+          <span class="name">{c.name}</span>
+          <span class="country">{c.country}</span>
+          <span class="time"><time data-tz={c.tz}>--:--</time> <span class="zone" data-zone={c.tz}></span></span>
+          <span class="coords">{fmtCoord(c.lat, 'N', 'S')} · {fmtCoord(c.lng, 'E', 'W')}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<script>
+  const clocks = document.querySelectorAll<HTMLTimeElement>('time[data-tz]');
+  const zones = document.querySelectorAll<HTMLElement>('[data-zone]');
+  const tick = () => {
+    const now = new Date();
+    clocks.forEach((el) => {
+      const tz = el.dataset.tz!;
+      el.textContent = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: tz }).format(now);
+      el.dateTime = now.toISOString();
+    });
+    zones.forEach((el) => {
+      const part = new Intl.DateTimeFormat('en-GB', { timeZone: el.dataset.zone!, timeZoneName: 'shortOffset' })
+        .formatToParts(now)
+        .find((p) => p.type === 'timeZoneName');
+      el.textContent = part ? part.value : '';
+    });
+  };
+  tick();
+  setInterval(tick, 20_000);
+</script>
+
+<style>
+  .head {
+    display: grid;
+    grid-template-columns: 1.2fr .8fr;
+    align-items: end;
+    gap: 32px 64px;
+  }
+  .h2 { margin-top: 22px; }
+
+  .map {
+    margin: clamp(48px, 7vw, 96px) 0 0;
+  }
+  svg { width: 100%; height: auto; overflow: visible; }
+  .land {
+    stroke: rgb(244 239 229 / .2);
+    stroke-width: .42;
+    stroke-linecap: round;
+    fill: none;
+  }
+  .core { fill: var(--brass-l); }
+  .pulse {
+    fill: var(--brass-l);
+    opacity: .35;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .pulse { animation: pulse 3.2s var(--ease) infinite; animation-delay: calc(var(--i) * .45s); }
+  }
+  @keyframes pulse {
+    0% { transform: scale(.6); opacity: .55; }
+    80%, 100% { transform: scale(2.6); opacity: 0; }
+  }
+  text {
+    fill: var(--canvas);
+    font-family: var(--sans);
+    font-size: 1.55px;
+    font-weight: 600;
+    letter-spacing: .14px;
+    text-transform: uppercase;
+  }
+
+  .list {
+    list-style: none;
+    margin: clamp(48px, 6vw, 80px) 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid var(--line-dark);
+  }
+  .city {
+    display: grid;
+    gap: 6px;
+    padding: 28px 24px 30px 0;
+    border-bottom: 1px solid var(--line-dark);
+  }
+  .city:not(:nth-child(3n + 1)) {
+    padding-left: 24px;
+    border-left: 1px solid var(--line-dark);
+  }
+  .name {
+    font-family: var(--serif);
+    font-size: clamp(26px, 2.4vw, 34px);
+    font-weight: 360;
+  }
+  .country {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--brass-l);
+  }
+  .time {
+    margin-top: 14px;
+    font-size: 15px;
+    color: rgb(244 239 229 / .85);
+    font-variant-numeric: tabular-nums;
+  }
+  .zone { color: var(--on-dark-muted); margin-left: 6px; font-size: 13px; }
+  .coords { font-size: 12.5px; color: rgb(244 239 229 / .45); font-variant-numeric: tabular-nums; }
+
+  @media (max-width: 860px) {
+    .head { grid-template-columns: 1fr; }
+    .list { grid-template-columns: 1fr 1fr; }
+    .city:not(:nth-child(3n + 1)) { padding-left: 0; border-left: 0; }
+    .city:nth-child(even) { padding-left: 20px; border-left: 1px solid var(--line-dark); }
+    text { font-size: 2.4px; }
+  }
+  @media (max-width: 520px) {
+    text { display: none; }
+  }
+</style>
