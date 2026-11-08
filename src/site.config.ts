@@ -7,9 +7,9 @@ export const site = {
   description:
     "Mizan is a precision health and wellness members' club bringing movement, recovery, measurement, nourishment and community into one membership. Join the waitlist.",
 
-  // Final public URL. Used for canonical links.
-  // TODO: set this once the domain is decided.
-  url: 'https://mizan-website.netlify.app',
+  // Public URL, used for canonical links and the link-preview image.
+  // The domain is registered at Namecheap; DNS points it at Netlify.
+  url: 'https://mizanexperience.com',
 
   // Keep false until launch. While false, every page ships with
   // <meta name="robots" content="noindex, nofollow"> and robots.txt
