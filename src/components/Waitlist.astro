@@ -1,0 +1,283 @@
+---
+// Waitlist sign-up, handled by Netlify Forms: Netlify detects this form in
+// the built HTML at deploy time and stores submissions (Netlify dashboard,
+// Forms → waitlist). Submitted with fetch so the visitor stays on the page;
+// without JavaScript it falls back to a normal POST.
+import { site } from '../site.config';
+import Photo from './Photo.astro';
+---
+<section class="waitlist section" id="waitlist" aria-labelledby="waitlist-title">
+  <div class="container grid">
+    <div class="intro">
+      <p class="eyebrow" data-reveal>Membership</p>
+      <h2 id="waitlist-title" class="h2" data-reveal>Join the waitlist.</h2>
+      <p class="lede" data-reveal>
+        Membership opens city by city, and founding places are limited. Join the waitlist to hear first
+        when Mizan opens near you.
+      </p>
+      <figure class="threshold" data-reveal>
+        <div class="ratio">
+          <Photo name="threshold" alt="The Mizan reception: a curved stone desk beneath the Mizan name, opening onto the lounge" sizes="(min-width: 960px) 38vw, 100vw" />
+        </div>
+        <figcaption>The Threshold</figcaption>
+      </figure>
+    </div>
+
+    <div class="card" data-reveal>
+      <form
+        name="waitlist"
+        method="POST"
+        action="/"
+        data-netlify="true"
+        netlify-honeypot="company"
+        data-waitlist
+        novalidate
+      >
+        <input type="hidden" name="form-name" value="waitlist" />
+        <p class="hp" aria-hidden="true">
+          <label>Leave this empty <input name="company" tabindex="-1" autocomplete="off" /></label>
+        </p>
+
+        <div class="row two">
+          <div class="field">
+            <label for="wl-first">First name</label>
+            <input id="wl-first" name="first_name" type="text" autocomplete="given-name" required maxlength="80" />
+          </div>
+          <div class="field">
+            <label for="wl-last">Last name</label>
+            <input id="wl-last" name="last_name" type="text" autocomplete="family-name" required maxlength="80" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="wl-email">Email</label>
+          <input id="wl-email" name="email" type="email" autocomplete="email" inputmode="email" required maxlength="254" />
+        </div>
+
+        <div class="field">
+          <label for="wl-city">Your city</label>
+          <div class="select">
+            <select id="wl-city" name="city" required>
+              <option value="" disabled selected>Choose a city</option>
+              {site.cities.map((c) => <option value={c.name}>{c.name}</option>)}
+              <option value="Elsewhere">Somewhere else</option>
+            </select>
+          </div>
+        </div>
+
+        <label class="consent">
+          <input type="checkbox" name="consent" value="yes" required />
+          <span>I'd like to receive emails from Mizan about membership and openings. I can unsubscribe at any time.</span>
+        </label>
+
+        <button class="btn submit" type="submit">
+          <span data-label>Join the waitlist</span> <span class="arrow" aria-hidden="true">→</span>
+        </button>
+
+        <p class="status" role="status" aria-live="polite" data-status></p>
+      </form>
+
+      <div class="done" data-done hidden tabindex="-1">
+        <p class="eyebrow">You're on the list</p>
+        <p class="done-title">Thank you<span data-name></span>.</p>
+        <p class="done-body">We'll write to you as membership opens<span data-city></span>. Until then, keep a little balance.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('form[data-waitlist]');
+  const done = document.querySelector<HTMLElement>('[data-done]');
+  if (form && done) {
+    const status = form.querySelector<HTMLElement>('[data-status]')!;
+    const label = form.querySelector<HTMLElement>('[data-label]')!;
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+
+    const messageFor = (el: HTMLInputElement | HTMLSelectElement) => {
+      if (el.name === 'email') return 'Please enter a valid email address.';
+      if (el.name === 'city') return 'Please choose a city.';
+      if (el.name === 'consent') return 'Please tick the box so we can email you.';
+      return 'Please fill in your name.';
+    };
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      status.textContent = '';
+      form.querySelectorAll('[aria-invalid]').forEach((el) => el.removeAttribute('aria-invalid'));
+
+      const invalid = [...form.querySelectorAll<HTMLInputElement | HTMLSelectElement>('input[required], select[required]')].find(
+        (el) => !el.checkValidity(),
+      );
+      if (invalid) {
+        invalid.setAttribute('aria-invalid', 'true');
+        status.textContent = messageFor(invalid);
+        invalid.focus();
+        return;
+      }
+
+      button.disabled = true;
+      label.textContent = 'Sending…';
+      try {
+        const body = new URLSearchParams(new FormData(form) as unknown as Record<string, string>).toString();
+        const res = await fetch('/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body,
+        });
+        if (!res.ok) throw new Error(String(res.status));
+
+        const data = new FormData(form);
+        const first = String(data.get('first_name') || '').trim();
+        const city = String(data.get('city') || '');
+        done.querySelector('[data-name]')!.textContent = first ? `, ${first}` : '';
+        done.querySelector('[data-city]')!.textContent = city && city !== 'Elsewhere' ? ` in ${city}` : '';
+        form.hidden = true;
+        done.hidden = false;
+        done.focus();
+      } catch {
+        status.textContent = 'Something went wrong. Please try again in a moment.';
+        button.disabled = false;
+        label.textContent = 'Join the waitlist';
+      }
+    });
+  }
+</script>
+
+<style>
+  .waitlist {
+    background: var(--canvas-2);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: .9fr 1.1fr;
+    gap: clamp(48px, 7vw, 120px);
+    align-items: start;
+  }
+  .h2 { margin-top: 22px; }
+  .lede { margin-top: 28px; }
+
+  .threshold { margin: clamp(36px, 4vw, 56px) 0 0; }
+  .threshold .ratio {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    border-radius: 2px;
+    background: var(--line);
+  }
+  .threshold figcaption {
+    margin-top: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .24em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .card {
+    background: var(--canvas);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: clamp(28px, 4vw, 56px);
+  }
+  form { display: grid; gap: 26px; }
+  .row.two { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+  .field { display: grid; gap: 8px; }
+  label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  input[type='text'],
+  input[type='email'],
+  select {
+    width: 100%;
+    min-height: 48px;
+    padding: 10px 0;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    border-radius: 0;
+    background: transparent;
+    color: var(--ink);
+    font: 400 18px/1.3 var(--sans);
+    transition: border-color .3s;
+    appearance: none;
+  }
+  input::placeholder { color: var(--muted-2); }
+  input:hover, select:hover { border-color: var(--muted-2); }
+  input:focus, select:focus { outline: none; border-color: var(--ink); }
+  input:focus-visible, select:focus-visible { outline: none; box-shadow: 0 1px 0 0 var(--ink); }
+  [aria-invalid='true'] { border-color: #a4452c !important; }
+  .select { position: relative; }
+  .select::after {
+    content: '';
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    width: 8px;
+    height: 8px;
+    border-right: 1.5px solid var(--muted);
+    border-bottom: 1.5px solid var(--muted);
+    transform: translateY(-70%) rotate(45deg);
+    pointer-events: none;
+  }
+  select:invalid { color: var(--muted-2); }
+  option { color: var(--ink); }
+
+  .consent {
+    display: grid;
+    grid-template-columns: 22px 1fr;
+    gap: 14px;
+    align-items: start;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--muted);
+    cursor: pointer;
+  }
+  .consent input {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    margin: 1px 0 0;
+    border: 1px solid var(--muted-2);
+    border-radius: 3px;
+    background: transparent;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    transition: background-color .2s, border-color .2s;
+  }
+  .consent input::after {
+    content: '';
+    width: 5px;
+    height: 10px;
+    border-right: 2px solid var(--canvas);
+    border-bottom: 2px solid var(--canvas);
+    transform: translateY(-1px) rotate(45deg) scale(0);
+    transition: transform .2s var(--ease);
+  }
+  .consent input:checked { background: var(--ink); border-color: var(--ink); }
+  .consent input:checked::after { transform: translateY(-1px) rotate(45deg) scale(1); }
+
+  .submit { justify-self: start; margin-top: 4px; }
+  .submit:disabled { opacity: .6; cursor: progress; }
+  .status { min-height: 1.4em; font-size: 14px; color: #a4452c; }
+
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+  .done { display: grid; gap: 14px; padding-block: 12px; outline: none; }
+  .done-title { font-family: var(--serif); font-size: clamp(34px, 3.6vw, 48px); font-weight: 360; line-height: 1.1; }
+  .done-body { color: var(--muted); max-width: 28em; }
+
+  @media (max-width: 960px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 520px) {
+    .row.two { grid-template-columns: 1fr; }
+    .submit { justify-self: stretch; }
+  }
+</style>

@@ -1,0 +1,66 @@
+---
+// A full-bleed cinematic image between sections. Where supported, the
+// image drifts slightly as it scrolls past (scroll-driven, no JavaScript).
+import Photo from './Photo.astro';
+
+interface Props {
+  photo: string;
+  alt: string;
+  caption?: string;
+}
+const { photo, alt, caption } = Astro.props;
+---
+<figure class="band">
+  <div class="media">
+    <Photo name={photo} alt={alt} sizes="100vw" />
+  </div>
+  {caption && <figcaption class="container">{caption}</figcaption>}
+</figure>
+
+<style>
+  .band {
+    position: relative;
+    margin: 0;
+    height: clamp(420px, 82svh, 920px);
+    overflow: hidden;
+    background: var(--ink);
+    view-timeline-name: --band;
+  }
+  .media {
+    position: absolute;
+    inset: -8% 0;
+  }
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      /* Longhands on purpose; see global.css. */
+      .media {
+        animation-name: band-drift;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-timeline: --band;
+        animation-range: cover 0% cover 100%;
+      }
+    }
+  }
+  @keyframes band-drift {
+    from { transform: translateY(-6%); }
+    to { transform: translateY(6%); }
+  }
+  figcaption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin-inline: auto;
+    padding-bottom: 24px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .24em;
+    text-transform: uppercase;
+    color: rgb(244 239 229 / .85);
+    text-shadow: 0 1px 12px rgb(0 0 0 / .45);
+  }
+  @media (max-width: 640px) {
+    .band { height: 62svh; }
+  }
+</style>

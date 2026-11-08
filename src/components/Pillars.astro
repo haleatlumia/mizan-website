@@ -1,0 +1,235 @@
+---
+import Photo from './Photo.astro';
+
+const pillars = [
+  {
+    name: 'Movement',
+    native: 'Hareket',
+    role: 'provides the stimulus.',
+    body: 'Strength, cardiorespiratory fitness, mobility, balance and play, with padel as the social heart of it.',
+    photo: 'courts',
+    alt: 'Glass-walled indoor padel courts beside a lounge with olive trees',
+  },
+  {
+    name: 'Recovery',
+    native: 'Sükûn',
+    role: 'supports the adaptation.',
+    body: 'Heat, cold, bodywork, breathwork and restorative practice, built into the week rather than saved for a treat.',
+    photo: 'recovery-lounge',
+    alt: 'A candlelit recovery room with floor cushions, loungers and red-light panels',
+  },
+  {
+    name: 'Measurement',
+    native: 'Mizaj',
+    role: 'tells us what to change.',
+    body: 'Health history, biomarkers, body composition, fitness and wearable data, read with your coach and turned into a protocol that evolves with you.',
+    photo: 'assessment',
+    alt: 'A member on an exercise bike during a fitness assessment, with results on screens beside a coach',
+  },
+  {
+    name: 'Nourishment',
+    native: 'Sofra',
+    role: 'supports the work.',
+    body: 'A Mediterranean-led kitchen that serves your priorities, and a daily ritual around the table.',
+    photo: 'nourishment',
+    alt: 'Grain bowls, salmon, a green juice and herbal tea on a travertine table',
+  },
+  {
+    name: 'Community',
+    native: 'Cemiyet',
+    role: 'keeps you coming back.',
+    body: 'Leagues, talks, rituals and members’ dinners that turn separate habits into a shared weekly rhythm.',
+    photo: 'lounge-people',
+    alt: 'Members working, talking and having coffee in the Lounge, with the courts behind glass',
+  },
+];
+---
+<section class="pillars section" id="pillars" aria-labelledby="pillars-title">
+  <div class="container">
+    <header class="head">
+      <p class="eyebrow" data-reveal>Five pillars</p>
+      <h2 id="pillars-title" class="h2" data-reveal>One membership for the whole practice.</h2>
+      <p class="lede" data-reveal>
+        Movement, recovery, measurement, nourishment and community: five parts of preventive health
+        that usually live in five different places, brought together under one roof and one plan.
+      </p>
+    </header>
+
+    <div class="layout" data-pillars>
+      <div class="stage" aria-hidden="true">
+        <div class="stage-inner">
+          {pillars.map((p, i) => (
+            <div class="slide" data-slide={i} data-active={i === 0 ? '' : undefined}>
+              <Photo name={p.photo} alt="" sizes="(min-width: 960px) 45vw, 100vw" />
+            </div>
+          ))}
+          <div class="counter"><span data-counter>01</span> / 05</div>
+        </div>
+      </div>
+
+      <ol class="list">
+        {pillars.map((p, i) => (
+          <li class="pillar" data-pillar={i} data-active={i === 0 ? '' : undefined}>
+            <div class="inline-media">
+              <Photo name={p.photo} alt={p.alt} sizes="100vw" />
+            </div>
+            <span class="num">{String(i + 1).padStart(2, '0')}</span>
+            <h3>{p.name}</h3>
+            <p class="native" lang="tr">{p.native}</p>
+            <p class="role">{p.name} {p.role}</p>
+            <p class="body">{p.body}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </div>
+</section>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-pillars]');
+  if (root && 'IntersectionObserver' in window) {
+    const items = [...root.querySelectorAll<HTMLElement>('[data-pillar]')];
+    const slides = [...root.querySelectorAll<HTMLElement>('[data-slide]')];
+    const counter = root.querySelector<HTMLElement>('[data-counter]');
+    const activate = (index: number) => {
+      items.forEach((el, i) => el.toggleAttribute('data-active', i === index));
+      slides.forEach((el, i) => el.toggleAttribute('data-active', i === index));
+      if (counter) counter.textContent = String(index + 1).padStart(2, '0');
+    };
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) activate(items.indexOf(entry.target as HTMLElement));
+        }
+      },
+      // A thin band across the middle of the viewport: whichever pillar
+      // crosses it becomes the active one.
+      { rootMargin: '-45% 0px -45% 0px' },
+    );
+    items.forEach((el) => io.observe(el));
+  }
+</script>
+
+<style>
+  .head {
+    max-width: 880px;
+  }
+  .h2 { margin-top: 22px; }
+  .lede { margin-top: 28px; }
+
+  .layout {
+    margin-top: clamp(56px, 8vw, 112px);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(40px, 6vw, 96px);
+  }
+
+  .stage {
+    position: relative;
+  }
+  .stage-inner {
+    position: sticky;
+    top: calc(var(--header-h) + 32px);
+    aspect-ratio: 4 / 5;
+    max-height: calc(100svh - var(--header-h) - 64px);
+    width: 100%;
+    overflow: hidden;
+    border-radius: 2px;
+  }
+  .slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transform: scale(1.06);
+    transition: opacity .9s var(--ease), transform 1.4s var(--ease);
+  }
+  .slide[data-active] {
+    opacity: 1;
+    transform: none;
+  }
+  .counter {
+    position: absolute;
+    left: 20px;
+    bottom: 18px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .24em;
+    color: rgb(244 239 229 / .8);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .pillar {
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    column-gap: 8px;
+    align-content: center;
+    min-height: 62svh;
+    padding-block: 40px;
+    border-top: 1px solid var(--line);
+    opacity: .38;
+    transition: opacity .6s var(--ease);
+  }
+  .pillar:last-child { border-bottom: 1px solid var(--line); }
+  .pillar[data-active] { opacity: 1; }
+  .inline-media { display: none; }
+  .num {
+    grid-row: span 4;
+    padding-top: 10px;
+    font-family: var(--serif);
+    font-size: 18px;
+    color: var(--brass);
+    font-variant-numeric: tabular-nums;
+  }
+  h3 {
+    font-size: clamp(38px, 4.4vw, 60px);
+    font-weight: 360;
+  }
+  .native {
+    margin-top: 10px;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: .28em;
+    text-transform: uppercase;
+    color: var(--brass-d);
+  }
+  .role {
+    margin-top: 22px;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(19px, 1.7vw, 23px);
+    font-weight: 340;
+  }
+  .body {
+    margin-top: 10px;
+    color: var(--muted);
+    max-width: 30em;
+  }
+
+  @media (max-width: 960px) {
+    .layout { grid-template-columns: 1fr; }
+    .stage { display: none; }
+    .pillar {
+      min-height: 0;
+      opacity: 1;
+      padding-block: 32px 40px;
+    }
+    .inline-media {
+      display: block;
+      position: relative;
+      grid-column: 1 / -1;
+      aspect-ratio: 3 / 2;
+      overflow: hidden;
+      margin-bottom: 28px;
+      border-radius: 2px;
+    }
+    .num { grid-row: span 4; }
+  }
+  @media (max-width: 560px) {
+    .pillar { grid-template-columns: 44px 1fr; }
+  }
+</style>

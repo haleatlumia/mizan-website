@@ -1,0 +1,74 @@
+---
+---
+<section class="practice section" id="practice" aria-labelledby="practice-title">
+  <div class="container">
+    <p class="eyebrow" data-reveal>
+      <span lang="ar" dir="rtl" class="ar">ميزان</span>
+      <span aria-hidden="true"> · </span>
+      <span id="practice-title">Balance, as a practice</span>
+    </p>
+    <p class="statement">
+      <span class="sweep">Mizan is an old word for balance. Not the kind you reach once and hold, but something you do, a little, every day: move, recover, eat, measure, gather, adjust.</span>
+    </p>
+    <p class="coda" data-reveal>
+      Not a place you visit when something is wrong, but a practice you keep coming back to.
+    </p>
+  </div>
+</section>
+
+<style>
+  .practice .container {
+    max-width: 1180px;
+  }
+  .ar {
+    font-family: 'Geeza Pro', 'Noto Naskh Arabic', 'Arial', serif;
+    font-size: 15px;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  .statement {
+    view-timeline-name: --statement;
+    margin-top: clamp(28px, 4vw, 48px);
+    font-family: var(--serif);
+    font-weight: 340;
+    font-size: clamp(30px, 4.6vw, 64px);
+    line-height: 1.14;
+    letter-spacing: -.018em;
+    color: var(--ink);
+  }
+  .coda {
+    margin-top: clamp(32px, 4vw, 56px);
+    margin-left: auto;
+    max-width: 30em;
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 340;
+    font-size: clamp(19px, 1.9vw, 26px);
+    line-height: 1.4;
+    color: var(--brass-d);
+  }
+
+  /* The statement fills in, in reading order, as it scrolls through view. */
+  @supports (animation-timeline: view()) and ((background-clip: text) or (-webkit-background-clip: text)) {
+    @media (prefers-reduced-motion: no-preference) {
+      .sweep {
+        color: transparent;
+        background-image:
+          linear-gradient(var(--ink), var(--ink)),
+          linear-gradient(rgb(31 26 20 / .2), rgb(31 26 20 / .2));
+        background-size: 0% 100%, 100% 100%;
+        background-repeat: no-repeat;
+        -webkit-background-clip: text;
+        background-clip: text;
+        animation-name: sweep;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-timeline: --statement;
+        animation-range: entry 55% cover 62%;
+      }
+    }
+  }
+  @keyframes sweep {
+    to { background-size: 100% 100%, 100% 100%; }
+  }
+</style>
