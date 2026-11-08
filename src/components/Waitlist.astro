@@ -4,6 +4,7 @@
 // Forms → waitlist). Submitted with fetch so the visitor stays on the page;
 // without JavaScript it falls back to a normal POST.
 import { site } from '../site.config';
+import { otherCitySuggestions } from '../data/club';
 import Photo from './Photo.astro';
 ---
 <section class="waitlist section" id="waitlist" aria-labelledby="waitlist-title">
@@ -65,6 +66,25 @@ import Photo from './Photo.astro';
           </div>
         </div>
 
+        <!-- Shown only when "Somewhere else" is chosen. Type any city, or pick
+             one from the suggestions. -->
+        <div class="field other" data-other hidden>
+          <label for="wl-other">Which city?</label>
+          <input
+            id="wl-other"
+            name="other_city"
+            type="text"
+            list="wl-city-list"
+            autocomplete="address-level2"
+            placeholder="Type or choose a city"
+            maxlength="80"
+            disabled
+          />
+          <datalist id="wl-city-list">
+            {otherCitySuggestions.map((c) => <option value={c} />)}
+          </datalist>
+        </div>
+
         <label class="consent">
           <input type="checkbox" name="consent" value="yes" required />
           <span>I'd like to receive emails from Mizan about membership and openings. I can unsubscribe at any time.</span>
@@ -94,9 +114,23 @@ import Photo from './Photo.astro';
     const label = form.querySelector<HTMLElement>('[data-label]')!;
     const button = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
 
+    // "Somewhere else" reveals the free-text city box (required while shown).
+    const citySelect = form.querySelector<HTMLSelectElement>('select[name="city"]')!;
+    const otherField = form.querySelector<HTMLElement>('[data-other]')!;
+    const otherInput = otherField.querySelector<HTMLInputElement>('input')!;
+    citySelect.addEventListener('change', () => {
+      const other = citySelect.value === 'Elsewhere';
+      otherField.hidden = !other;
+      otherInput.disabled = !other;
+      otherInput.required = other;
+      if (other) otherInput.focus();
+      else otherInput.value = '';
+    });
+
     const messageFor = (el: HTMLInputElement | HTMLSelectElement) => {
       if (el.name === 'email') return 'Please enter a valid email address.';
       if (el.name === 'city') return 'Please choose a city.';
+      if (el.name === 'other_city') return 'Please tell us which city.';
       if (el.name === 'consent') return 'Please tick the box so we can email you.';
       return 'Please fill in your name.';
     };
@@ -129,9 +163,10 @@ import Photo from './Photo.astro';
 
         const data = new FormData(form);
         const first = String(data.get('first_name') || '').trim();
-        const city = String(data.get('city') || '');
+        const chosen = String(data.get('city') || '');
+        const city = chosen === 'Elsewhere' ? String(data.get('other_city') || '').trim() : chosen;
         done.querySelector('[data-name]')!.textContent = first ? `, ${first}` : '';
-        done.querySelector('[data-city]')!.textContent = city && city !== 'Elsewhere' ? ` in ${city}` : '';
+        done.querySelector('[data-city]')!.textContent = city ? ` in ${city}` : '';
         form.hidden = true;
         done.hidden = false;
         done.focus();
@@ -225,6 +260,14 @@ import Photo from './Photo.astro';
   }
   select:invalid { color: var(--muted-2); }
   option { color: var(--ink); }
+
+  /* The "Which city?" box eases in when it appears. */
+  .other {
+    transition: opacity .35s var(--ease), translate .35s var(--ease);
+  }
+  @starting-style {
+    .other { opacity: 0; translate: 0 -6px; }
+  }
 
   .consent {
     display: grid;

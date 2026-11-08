@@ -43,6 +43,7 @@ investor material.
 | Path | What it is |
 | --- | --- |
 | `src/site.config.ts` | Name, tagline, cities, URL, launch switch, analytics ID |
+| `src/data/club.ts` | Pillars, spaces and city suggestions (used by the page and `llms.txt`) |
 | `src/styles/global.css` | Brand tokens, base styles, scroll reveals |
 | `src/layouts/Base.astro` | `<head>`, self-hosted fonts, meta tags, header and footer |
 | `src/components/` | Page sections, plus `Header`, `Footer`, `Photo`, `Analytics` |
@@ -80,13 +81,19 @@ footer). Keep that wording while the images are renders.
 The form is handled by Netlify Forms, so there's no backend to run.
 Netlify finds the form in the built HTML on each deploy (form detection is
 turned on for the project). Submissions appear in the Netlify dashboard
-under **Forms → waitlist**, and can be exported as CSV. Email
-notifications for new sign-ups are set under **Project configuration →
-Notifications → Emails and webhooks → Form submission notifications**.
+under **Forms → waitlist**, and can be exported as CSV.
+
+Each sign-up is also emailed to hale@lumiapartners.com with the subject
+"Mizan waitlist: new sign-up" (Netlify → **Project configuration →
+Notifications → Emails and webhooks**). Netlify only sends form emails to
+members of the Netlify team, so it can't email an address like
+waitlist@mizanexperience.com directly.
 
 Fields: first name, last name, email, city (the six cities or "Somewhere
-else") and a required consent box. A hidden honeypot field filters bots,
-on top of Netlify's own spam filtering.
+else"), `other_city` (a "Which city?" box with suggestions that appears
+only for "Somewhere else"; the suggestion list is in `src/data/club.ts`)
+and a required consent box. A hidden honeypot field filters bots, on top
+of Netlify's own spam filtering.
 
 ## Before launch
 
@@ -118,6 +125,14 @@ publishes `robots.txt` (allows crawlers, points to the sitemap),
 `sitemap.xml`, and schema.org structured data for the organisation on the
 home page. Deploy previews stay out of search results: Netlify sends
 `X-Robots-Tag: noindex` on them.
+
+AI assistants and answer engines (ChatGPT, Claude, Perplexity, Google's AI
+results) are welcome too: `robots.txt` doesn't block any crawler, the page
+content is plain HTML that needs no JavaScript to read, and
+[`/llms.txt`](https://mizanexperience.com/llms.txt) gives them a Markdown
+summary of Mizan, the cities, pillars and spaces. It's generated from
+`src/data/club.ts` and `src/site.config.ts`, the same data the page uses,
+so it stays in step with the site.
 
 ## Deploy
 
