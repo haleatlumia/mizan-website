@@ -52,14 +52,25 @@ investor material.
 
 ## Photos
 
-Drop images into `src/assets/photos/`, named after the slot they fill:
+Images live in `src/assets/photos/`, named after the slot they fill. To
+swap a picture, replace the file and keep its name:
 
-`exterior` (hero), `lounge`, `courts`, `studio`, `gym`, `wet-recovery`,
-`dry-recovery`, `hammam`, `mizaj-suite`, `coffee`
+| Slot | Used for |
+| --- | --- |
+| `exterior` | Hero, and the link-preview image |
+| `outdoor-lounge` | Full-width image after the opening statement |
+| `tea-circle` | Avicenna section |
+| `courts`, `recovery-lounge`, `assessment`, `nourishment`, `lounge-people` | The five pillars, in order |
+| `lounge`, `courts-hall`, `studio`, `gym`, `wet-recovery`, `hammam`, `mizaj-suite`, `dry-recovery`, `treatment` | Spaces gallery, in order |
+| `threshold` | Waitlist section |
 
 Any of `.jpg`, `.png`, `.webp` or `.avif` works, e.g. `lounge.jpg`. The
 build turns each into responsive AVIF and WebP at several sizes. A slot
 with no file shows a placeholder panel labelled "photo to come".
+
+The current images are 90%-quality JPEG copies of the brochure's concept
+renders. The original PNGs are kept locally in `photo-originals/`, which
+Git ignores (they total about 55MB).
 
 The renders are concept renders, and the page says so (gallery note and
 footer). Keep that wording while the images are renders.

@@ -19,3 +19,6 @@ npm-debug.log*
 # macOS
 .DS_Store
 **/.DS_Store
+
+# Original photo files (large PNGs); web copies live in src/assets/photos
+photo-originals/

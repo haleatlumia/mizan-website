@@ -41,17 +41,26 @@ const widths = image
     })()
   : [];
 
+// Placeholder labels, one per slot the page uses (see README "Photos").
 const labels: Record<string, string> = {
   exterior: 'Exterior',
-  lounge: 'The Lounge',
+  'outdoor-lounge': 'Outdoor lounge',
+  'tea-circle': 'Tea circle',
   courts: 'Courts',
+  'courts-hall': 'Courts',
+  'recovery-lounge': 'Recovery',
+  assessment: 'Assessment room',
+  nourishment: 'Nourishment',
+  'lounge-people': 'The Lounge',
+  lounge: 'The Lounge',
   studio: 'Movement studio',
   gym: 'Gym',
   'wet-recovery': 'Wet recovery',
   'dry-recovery': 'Dry recovery',
   hammam: 'The Hammam',
   'mizaj-suite': 'The Mizaj Suite',
-  coffee: 'Coffee & tea bar',
+  treatment: 'Treatment rooms',
+  threshold: 'The Threshold',
 };
 ---
 {image ? (

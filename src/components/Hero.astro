@@ -17,10 +17,12 @@ import { site } from '../site.config';
   <div class="content container">
     <p class="pillars eyebrow">{site.pillars.join(' · ')}</p>
     <h1 id="hero-title" class="wordmark">{site.name}</h1>
-    <p class="tagline">{site.tagline}</p>
-    <div class="actions">
-      <a class="btn btn-light" href="#waitlist">Join the waitlist <span class="arrow" aria-hidden="true">→</span></a>
-      <a class="discover" href="#practice">Discover Mizan</a>
+    <div class="row">
+      <p class="tagline">{site.tagline}</p>
+      <div class="actions">
+        <a class="btn btn-light" href="#waitlist">Join the waitlist <span class="arrow" aria-hidden="true">→</span></a>
+        <a class="discover" href="#practice">Discover Mizan</a>
+      </div>
     </div>
   </div>
 
@@ -65,7 +67,8 @@ import { site } from '../site.config';
     z-index: -1;
     background:
       linear-gradient(180deg, rgb(20 16 12 / .55) 0%, rgb(20 16 12 / 0) 28%),
-      linear-gradient(0deg, rgb(20 16 12 / .78) 0%, rgb(20 16 12 / .25) 45%, rgb(20 16 12 / 0) 70%);
+      linear-gradient(90deg, rgb(20 16 12 / .45) 0%, rgb(20 16 12 / 0) 55%),
+      linear-gradient(0deg, rgb(20 16 12 / .82) 0%, rgb(20 16 12 / .3) 42%, rgb(20 16 12 / 0) 68%);
   }
 
   .content {
@@ -80,7 +83,8 @@ import { site } from '../site.config';
   }
   .wordmark {
     margin-top: clamp(14px, 2vw, 22px);
-    font-size: clamp(64px, 15vw, 232px);
+    /* Sized so the wordmark sits below the building's own Mizan sign. */
+    font-size: clamp(64px, 11vw, 184px);
     font-weight: 330;
     line-height: .9;
     letter-spacing: .14em;
@@ -102,6 +106,17 @@ import { site } from '../site.config';
     align-items: center;
     flex-wrap: wrap;
     gap: 16px 28px;
+  }
+  /* Desktop: tagline and buttons share a line, so the whole block sits
+     lower in the frame and the wordmark clears the building's sign. */
+  @media (min-width: 960px) {
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+    }
+    .row .actions { margin-top: clamp(14px, 2vw, 24px); flex-wrap: nowrap; }
   }
   .discover {
     font-size: 12.5px;

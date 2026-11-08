@@ -2,14 +2,15 @@
 import Photo from './Photo.astro';
 
 const spaces = [
-  { photo: 'lounge', wing: 'The social heart', name: 'The Lounge', line: 'Coffee, work, conversation and meals: where members return between everything else.', alt: 'The Lounge, with lounge seating and an all-day kitchen' },
-  { photo: 'courts', wing: 'Active wing', name: 'Courts', line: 'Padel for a match, a lesson, a league or simply to play with friends.', alt: 'Indoor padel courts' },
-  { photo: 'studio', wing: 'Active wing', name: 'Movement studios', line: 'Pilates and reformer, mobility, yoga and conditioning, coached in small groups.', alt: 'A light-filled movement studio' },
-  { photo: 'gym', wing: 'Active wing', name: 'Strength & functional gym', line: 'Built around one objective: keeping the body capable.', alt: 'The strength and functional training gym' },
-  { photo: 'wet-recovery', wing: 'Calm wing', name: 'Wet recovery', line: 'Sauna, steam, cold plunges and a heated immersion pool.', alt: 'Sauna and heated pool in wet recovery' },
-  { photo: 'hammam', wing: 'Calm wing · Cultural anchor', name: 'The Hammam', line: 'Heat, water and ritual, contemporary in execution and centuries old in spirit.', alt: 'The hammam with heated stone' },
-  { photo: 'mizaj-suite', wing: 'Calm wing · Mizaj', name: 'The Mizaj Suite', line: 'Where your measurements become a personal protocol, with your coach.', alt: 'A private consultation room in the Mizaj Suite' },
-  { photo: 'dry-recovery', wing: 'Calm wing', name: 'Dry recovery', line: 'Red light, compression, breathwork and bodywork, in a quieter setting.', alt: 'The dry recovery room' },
+  { photo: 'lounge', wing: 'The social heart', name: 'The Lounge', line: 'Coffee, work, conversation and meals: where members return between everything else.', alt: 'The Lounge: sofas, a coffee bar and long tables under a high ceiling, with the courts beyond' },
+  { photo: 'courts-hall', wing: 'Active wing', name: 'Courts', line: 'Padel for a match, a lesson, a league or simply to play with friends.', alt: 'A row of glass-walled indoor padel courts under pendant lights' },
+  { photo: 'studio', wing: 'Active wing', name: 'Movement studios', line: 'Pilates and reformer, mobility, yoga and conditioning, coached in small groups.', alt: 'A yoga class stretching in a studio with floor-to-ceiling windows onto trees' },
+  { photo: 'gym', wing: 'Active wing', name: 'Strength & functional gym', line: 'Built around one objective: keeping the body capable.', alt: 'The strength gym with racks, dumbbells and machines in warm light' },
+  { photo: 'wet-recovery', wing: 'Calm wing', name: 'Wet recovery', line: 'Sauna, steam, cold plunges and a heated immersion pool.', alt: 'A heated pool beside cold plunge tubs, with a sauna and steam room behind glass' },
+  { photo: 'hammam', wing: 'Calm wing · Cultural anchor', name: 'The Hammam', line: 'Heat, water and ritual, contemporary in execution and centuries old in spirit.', alt: 'Bathers around the heated stone of a domed marble hammam' },
+  { photo: 'mizaj-suite', wing: 'Calm wing · Mizaj', name: 'The Mizaj Suite', line: 'Where your measurements become a personal protocol, with your coach.', alt: 'A member and coach reviewing a health dashboard at a round table in the Mizaj Suite' },
+  { photo: 'dry-recovery', wing: 'Calm wing', name: 'Dry recovery', line: 'Red light, compression, breathwork and bodywork, in a quieter setting.', alt: 'Members resting on loungers beside red-light panels and compression chairs' },
+  { photo: 'treatment', wing: 'Calm wing', name: 'Treatment rooms', line: 'Bodywork and treatments, in rooms made for quiet.', alt: 'A treatment room with a massage table, travertine walls and soft light' },
 ];
 ---
 <section class="spaces section on-dark" id="spaces" aria-labelledby="spaces-title">
@@ -104,6 +105,7 @@ const spaces = [
   .ratio {
     position: relative;
     aspect-ratio: 4 / 5;
+    background: var(--ink-2);
     overflow: hidden;
     border-radius: 2px;
   }

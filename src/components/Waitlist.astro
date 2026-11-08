@@ -4,6 +4,7 @@
 // Forms → waitlist). Submitted with fetch so the visitor stays on the page;
 // without JavaScript it falls back to a normal POST.
 import { site } from '../site.config';
+import Photo from './Photo.astro';
 ---
 <section class="waitlist section" id="waitlist" aria-labelledby="waitlist-title">
   <div class="container grid">
@@ -14,6 +15,12 @@ import { site } from '../site.config';
         Membership opens city by city, and founding places are limited. Join the waitlist to hear first
         when Mizan opens near you.
       </p>
+      <figure class="threshold" data-reveal>
+        <div class="ratio">
+          <Photo name="threshold" alt="The Mizan reception: a curved stone desk beneath the Mizan name, opening onto the lounge" sizes="(min-width: 960px) 38vw, 100vw" />
+        </div>
+        <figcaption>The Threshold</figcaption>
+      </figure>
     </div>
 
     <div class="card" data-reveal>
@@ -149,6 +156,23 @@ import { site } from '../site.config';
   }
   .h2 { margin-top: 22px; }
   .lede { margin-top: 28px; }
+
+  .threshold { margin: clamp(36px, 4vw, 56px) 0 0; }
+  .threshold .ratio {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    border-radius: 2px;
+    background: var(--line);
+  }
+  .threshold figcaption {
+    margin-top: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .24em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
 
   .card {
     background: var(--canvas);
