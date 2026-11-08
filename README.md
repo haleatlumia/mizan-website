@@ -90,18 +90,31 @@ on top of Netlify's own spam filtering.
 
 ## Before launch
 
-1. **Domain.** Set `url` in `src/site.config.ts`. If the site takes the main
-   domain, decide where the data room goes (for example a `dataroom.`
-   subdomain on its own Netlify site).
+1. **Privacy notice.** The waitlist collects names and emails from the UK,
+   EU, Türkiye and the US; publish a privacy notice and link it from the
+   form before launch.
 2. **Indexing.** Set `indexable: true` in `src/site.config.ts`. Until then
    every page is `noindex` and `robots.txt` blocks crawlers.
 3. **Analytics.** Create a new website in Umami for this site and put its ID
    in `umamiWebsiteId`. Don't reuse the data room's ID.
 
+## Domain
+
+**https://mizanexperience.com**, with `www.mizanexperience.com` redirecting
+to it. Registered at Namecheap, which also keeps the DNS (so Namecheap's
+email forwarding keeps working). In Namecheap → Advanced DNS:
+
+| Type | Host | Value |
+| --- | --- | --- |
+| A Record | `@` | `75.2.60.5` (Netlify's load balancer) |
+| CNAME Record | `www` | `mizan-website.netlify.app` |
+
+Netlify issues and renews the HTTPS certificate automatically. The
+Netlify address, https://mizan-website.netlify.app, keeps working too.
+
 ## Deploy
 
-Hosted on Netlify as the `mizan-website` project (Lumia Partners team):
-https://mizan-website.netlify.app
+Hosted on Netlify as the `mizan-website` project (Lumia Partners team).
 
 - Every push to `main` deploys to production.
 - Every pull request gets its own preview link
