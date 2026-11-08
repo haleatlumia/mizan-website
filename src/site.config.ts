@@ -16,10 +16,11 @@ export const site = {
   // page and block crawlers in robots.txt.
   indexable: true,
 
-  // Umami website ID for THIS site (create a new website in Umami;
-  // don't reuse the data room's ID, or the two sites' numbers mix).
+  // Umami website ID for this site: "Mizan website" in the
+  // hale@lumiapartners.com Umami Cloud account. (The data room has its own
+  // ID in the hale0yildiz@gmail.com account; don't mix them.)
   // Leave empty to ship with no analytics at all.
-  umamiWebsiteId: '',
+  umamiWebsiteId: '32c24b81-f643-4f6f-a63f-bce590a2d630',
 
   // Cities shown on the site and offered in the waitlist form, in display
   // order. Set by Hale for the website; this list differs from the data

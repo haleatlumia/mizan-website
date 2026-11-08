@@ -100,8 +100,15 @@ of Netlify's own spam filtering.
 1. **Privacy notice.** The waitlist collects names and emails from the UK,
    EU, Türkiye and the US; publish a privacy notice and link it from the
    form before launch.
-2. **Analytics.** Create a new website in Umami for this site and put its ID
-   in `umamiWebsiteId`. Don't reuse the data room's ID.
+
+## Analytics
+
+[Umami Cloud](https://cloud.umami.is), cookie-free, so no consent banner
+is needed. The site is "Mizan website" in the **hale@lumiapartners.com**
+Umami account (ID in `umamiWebsiteId`, `src/site.config.ts`). The data
+room is tracked separately in the **hale0yildiz@gmail.com** account,
+whose free plan allows only one website. To turn analytics off, empty
+`umamiWebsiteId`.
 
 ## Domain
 
