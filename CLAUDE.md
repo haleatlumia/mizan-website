@@ -16,7 +16,8 @@ See README.md for commands and layout.
 - Brand tokens live in `src/styles/global.css` and mirror the data room
   front door (`mizan/dataroom/source/index.html`). Use the CSS variables,
   not raw hex values.
-- Keep `indexable: false` until the user says the site is launching.
+- The site is indexable (`indexable: true`, switched on by the user on
+  2026-11-08). Don't turn it off without asking.
 - One landing page only, unless the user asks for more. Sections live in
   `src/components/`; see README "The page".
 - Photos go in `src/assets/photos/` named by slot (README "Photos") and are

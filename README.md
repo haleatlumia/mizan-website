@@ -93,9 +93,7 @@ on top of Netlify's own spam filtering.
 1. **Privacy notice.** The waitlist collects names and emails from the UK,
    EU, Türkiye and the US; publish a privacy notice and link it from the
    form before launch.
-2. **Indexing.** Set `indexable: true` in `src/site.config.ts`. Until then
-   every page is `noindex` and `robots.txt` blocks crawlers.
-3. **Analytics.** Create a new website in Umami for this site and put its ID
+2. **Analytics.** Create a new website in Umami for this site and put its ID
    in `umamiWebsiteId`. Don't reuse the data room's ID.
 
 ## Domain
@@ -110,7 +108,16 @@ email forwarding keeps working). In Namecheap → Advanced DNS:
 | CNAME Record | `www` | `mizan-website.netlify.app` |
 
 Netlify issues and renews the HTTPS certificate automatically. The
-Netlify address, https://mizan-website.netlify.app, keeps working too.
+Netlify address, https://mizan-website.netlify.app, redirects to the
+domain (set in `netlify.toml`) so search engines see one site.
+
+## Search engines
+
+Indexing is on (`indexable: true` in `src/site.config.ts`). The build
+publishes `robots.txt` (allows crawlers, points to the sitemap),
+`sitemap.xml`, and schema.org structured data for the organisation on the
+home page. Deploy previews stay out of search results: Netlify sends
+`X-Robots-Tag: noindex` on them.
 
 ## Deploy
 

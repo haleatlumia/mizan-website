@@ -48,6 +48,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:image:height" content={String(ogImage.attributes.height)} />
     <meta property="og:image:alt" content="The Mizan club entrance at dusk, framed by olive trees" />
     <meta name="twitter:card" content="summary_large_image" />
+    <slot name="head" />
 
     <Analytics />
   </head>

@@ -8,8 +8,33 @@ import Pillars from '../components/Pillars.astro';
 import Spaces from '../components/Spaces.astro';
 import Cities from '../components/Cities.astro';
 import Waitlist from '../components/Waitlist.astro';
+import { site } from '../site.config';
+
+// Structured data so search engines know who Mizan is.
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': `${site.url}/#organization`,
+      name: site.name,
+      url: `${site.url}/`,
+      description: site.description,
+      slogan: site.tagline,
+      areaServed: site.cities.map((c) => ({ '@type': 'City', name: c.name })),
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${site.url}/#website`,
+      name: site.name,
+      url: `${site.url}/`,
+      publisher: { '@id': `${site.url}/#organization` },
+    },
+  ],
+};
 ---
 <Base overHero>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   <Hero />
   <Practice />
   <Band
