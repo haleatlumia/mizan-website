@@ -11,10 +11,10 @@ export const site = {
   // The domain is registered at Namecheap; DNS points it at Netlify.
   url: 'https://mizanexperience.com',
 
-  // Keep false until launch. While false, every page ships with
-  // <meta name="robots" content="noindex, nofollow"> and robots.txt
-  // blocks crawlers, so search engines don't index the site early.
-  indexable: false,
+  // Search engines may index the site (switched on 2026-11-08). Set to
+  // false to add <meta name="robots" content="noindex, nofollow"> to every
+  // page and block crawlers in robots.txt.
+  indexable: true,
 
   // Umami website ID for THIS site (create a new website in Umami;
   // don't reuse the data room's ID, or the two sites' numbers mix).

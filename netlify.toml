@@ -5,6 +5,15 @@
 [build.environment]
   NODE_VERSION = "24"
 
+# One public address for search engines: send the Netlify subdomain to the
+# custom domain. Deploy previews (deploy-preview-N--mizan-website.netlify.app)
+# are a different host, so they're unaffected.
+[[redirects]]
+  from = "https://mizan-website.netlify.app/*"
+  to = "https://mizanexperience.com/:splat"
+  status = 301
+  force = true
+
 [[headers]]
   for = "/*"
   [headers.values]
